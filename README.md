@@ -77,7 +77,24 @@ beslutte sig for en passende fortolkning, som beskrives i rapporten.
 
 # Krav til Softwarekonstruktion
 
-### Opdateres senere på ugen
+I skal programmere jeres design eller dele af jeres design på en sådan møde at det klart
+fremgår at koden er baseret på designet og lever op til den generelle opgavebeskrivelse.
+
+##Koden skal som minimum indeholde:
+* Flere klasser, indeholdende indkapsling.
+* Datastrukturer, såsom Array/ArrayList.
+* Nedarvning.
+* Filer på harddisk, således at data bevares/hentes.
+* Konsol UI, formateret pænt.
+Og I skal demonstrerer en general evne til at programmere basale algoritmer.
+
+##Rapporten skal som minimum indeholde:
+* Scope for SWC delen af projektet.
+* Et opdateret klassediagram.
+* En grundig beskrivelse af jeres konstruktion af produktet og en velbegrundede
+forklaringer på de valg I har truffet under jeres udvikling.
+* En beskrivelse af hvad der virker og hvad der ikke virker, og hvorfor.
+Der skal være sammenhæng mellem jeres software design og software konstruktion. 
 
 # Krav til Rapport og programdokumentation
 
