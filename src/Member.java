@@ -9,7 +9,6 @@ public class Member {
   private boolean swim;       // true junior - false senior
   private boolean team;       // true motionist - false konkurrencesvømmer
   private int age;
-  private int payment;
 
   // passive member constructor
   public Member(String firstName, String lastName, boolean pay, boolean memberType) {
@@ -38,21 +37,8 @@ public class Member {
     return discipline;
   }
 
-  private int setPaymemt(boolean pay, boolean memberType, int age){
-    int young = 1000;
-    int senior = 1600;
-    Double old = senior - senior * 0.25;
-    return old.intValue();
-  }
-
   public boolean isPay() {
 
     return pay;
-  }
-
-  public static void main(String[] args) {
-    Member mem = new Member("bob","olsen", true, true);
-    System.out.println(mem.setPaymemt());
-
   }
 }
