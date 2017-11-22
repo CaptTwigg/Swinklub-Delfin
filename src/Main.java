@@ -1,23 +1,30 @@
+import java.util.Scanner;
+
 public class Main {
 
-  public static void main(String[] args) {
-    Member member = new Member("bob", "hansen", true, true);
-    Kontigent kon = new Kontigent("bob", "hansen", true, true);
-    System.out.println(kon);
-    System.out.println(member);
+  public static void main(String[] args) throws Exception {
+
+    mainMenu();
+
   }
 
-//  private static void mainMenu() {
-//    System.out.println("1: Member, 2: Kontigent ");
-//    do {
-//      switch (input) {
-//        case 1:
-//          memberMenu();
-//        case 2:
+  private static void mainMenu() throws Exception{
+    Scanner input = new Scanner(System.in);
+    System.out.println("Choose a menu.");
+    do {
+      System.out.println("1: Member, 2: Kontigent ");
+      switch (input.nextInt()) {
+        case 1:
+          MemberUtil.memberMenu();
+          System.out.println(MemberUtil.getMembers());
+
+          break;
+        case 2:
 //          kontigentMenu();
-//        default:
-//          System.out.println("Not valid menu number");
-//      }
-//    } while (true);
-//  }
+          break;
+        default:
+          System.out.println("Not valid menu number");
+      }
+    } while (false);
+  }
 }
