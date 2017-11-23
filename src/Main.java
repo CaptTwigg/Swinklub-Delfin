@@ -16,7 +16,6 @@ public class Main {
       switch (input.nextInt()) {
         case 1:
           MemberUtil.memberMenu();
-          System.out.println(MemberUtil.getMembers());
 
           break;
         case 2:

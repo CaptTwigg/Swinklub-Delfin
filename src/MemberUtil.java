@@ -13,12 +13,12 @@ public class MemberUtil {
 
   public static void memberMenu() throws Exception {
 
-
     Scanner scanner = new Scanner(System.in);
     boolean keepGoing = true;
+    loadFromFile();
+
     do {
       System.out.println("\n1: Add Member 2: Change member info 3: Show members");
-      loadFromFile();
 
       switch (scanner.nextInt()) {
         case -1:
