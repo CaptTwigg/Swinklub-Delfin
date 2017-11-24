@@ -27,7 +27,7 @@ public class Member {
   public Member(String firstName, String lastName, String discipline, String memberType, String team, int age){
     this.firstName = firstName;
     this.lastName = lastName;
-    this.email = firstName + lastName + "@delfin.dk";;
+    this.email = firstName + lastName + "@delfin.dk";
     this.discipline = discipline;
     this.memberType = memberType;
     this.group = age < 18 ? "Junior": "Senior";
@@ -49,7 +49,7 @@ public class Member {
     this.payment = payment;
   }
 
-  public void autoPayment() {
+  public void setPayment() {
     int payment;
     int senior = 1600;
     Double old = senior - senior * 0.25;
@@ -151,7 +151,7 @@ public class Member {
     return payment;
   }
 
-  public void setPayment(int payment, String memberType) {
+  public void setPayment(int payment) {
     this.payment = payment;
   }
 }

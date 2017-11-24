@@ -7,9 +7,17 @@ public class MemberUtil {
   private static final String file = "src/members.dat";
   private static ArrayList<Member> members = new ArrayList<>();
 
-  public static ArrayList<Member> getMembers() {
-    return members;
-  }
+  /*
+  Overview of methods:
+    memberMenu
+    addMember
+    addMemberElse
+    changeMember
+    showMember
+    saveToFile
+    loadFromFile
+    stringInput
+   */
 
   public static void memberMenu() throws Exception {
 
@@ -48,14 +56,24 @@ public class MemberUtil {
     String lastName = input.next();
     String memberType = stringInput("Enter member type active/passive: ", "active", "passive", "Not valid input");
 
+
     // Check if new member is passive and then use short or long constructor
-    if (memberType.toLowerCase().equals("passive")) {
+    if (alreadyExsist(firstName, lastName)) System.out.println("Member already exsist");
+    else if (memberType.toLowerCase().equals("passive")) {
       members.add(new Member(firstName, lastName, memberType));
-      members.get(members.size() - 1).autoPayment();
+      members.get(members.size() - 1).setPayment();
     } else {
       addMemberElse(firstName, lastName, memberType);
     }
-    System.out.println("Member created.");
+  }
+
+  // Check if member already exsit
+  private static boolean alreadyExsist(String firstName, String lastName) {
+    String email = firstName + lastName + "@delfin.dk";
+    for (Member m : members) {
+      if (email.toLowerCase().equals(m.getEmail().toLowerCase())) return true;
+    }
+    return false;
   }
 
   // method for long constructor member creating
@@ -70,7 +88,7 @@ public class MemberUtil {
 
     // create object member and set payment
     members.add(new Member(firstName, lastName, discipline, memberType, team, age));
-    members.get(members.size() - 1).autoPayment();
+    members.get(members.size() - 1).setPayment();
 
     // Ask if new member want to pay now
     System.out.printf("Wanna pay now? \t price: %s\n", members.get(members.size() - 1).getPayment());
@@ -78,16 +96,58 @@ public class MemberUtil {
     members.get(members.size() - 1).setPayed(payed);
   }
 
+  private void changeMember() {
+    Scanner input = new Scanner(System.in);
+
+
+
+    boolean keepGoing = true;
+    do {
+      System.out.println("1: First name, 2: Last name, 3: Member type, 4: ");
+      switch (input.nextInt()) {
+        case -1:
+          keepGoing = false;
+          break;
+        case 1:
+
+      }
+    } while (keepGoing);
+  }
+
+  private void showSearch(String name) {
+    ArrayList<Member> foundArray = new ArrayList<>();
+    for (Member member : members) {
+      if (name
+              .toLowerCase()
+              .equals(member.getFirstName())
+              || name
+              .toLowerCase()
+              .equals(member.getLastName())) {
+        foundArray.add(member);
+      }
+    }
+    for (int index = 0; index < members.size(); index++)
+      System.out.println(index + " " + members.get(index));
+  }
+
+  private int searchIndex(String name) {
+    for (int index = 0; index < members.size(); index++)
+      if (name.toLowerCase().equals(members.get(index).getFirstName()) || name.toLowerCase().equals(members.get(index).getLastName()))
+        return index;
+    return -1;
+  }
+
+
   private static void showMembers() {
-    for (int i = 0; i < members.size(); i++) {
-      System.out.println(members.get(i));
+    for (Member member : members) {
+      System.out.println(member);
     }
   }
 
   private static void saveToFile() throws IOException {
     new PrintStream(new File(file));
-    for (int index = 0; index < members.size(); index++) {
-      members.get(index).saveToFile(file);
+    for (Member member : members) {
+      member.saveToFile(file);
     }
   }
 
@@ -103,12 +163,11 @@ public class MemberUtil {
     Scanner input = new Scanner(System.in);
     System.out.print(message);
     String inputString = input.next();
-    String returnVal = "";
+    String returnVal;
 
-    if (inputString.toLowerCase().equals(first) || inputString.toLowerCase().equals(second)) {
-      if (inputString.toLowerCase().equals(first)) returnVal = first;
-      if (inputString.toLowerCase().equals(second)) returnVal = second;
-    } else {
+    if (inputString.toLowerCase().equals(first)) returnVal = first;
+    else if (inputString.toLowerCase().equals(second)) returnVal = second;
+    else {
       System.out.println(error);
       returnVal = stringInput(message, first, second, error);
     }
