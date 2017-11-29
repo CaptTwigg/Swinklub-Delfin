@@ -188,8 +188,8 @@ public class MemberUtil {
     Scanner scan = new Scanner(raw);
     ArrayList<ArrayList<String>> loadedArray = new ArrayList<>();
 
-    String line = scan.nextLine();
-    String[] array = line.split("],");
+    String line = scan.nextLine().trim();
+    String[] array = line.split("\\](.*?)\\[");
 
     for (String s : array) {
       String quick = s.replaceAll("[\\[\\]]", "");
@@ -215,10 +215,10 @@ public class MemberUtil {
   }
 
   public static void main(String[] args) throws Exception {
-   //memberMenu();
-    loadFromFile();
+   memberMenu();
+    //loadFromFile();
     for(Member m : members){
-      System.out.println(m.getResults());
+      System.out.println("final: " + m.getResults());
     }
   }
 }
