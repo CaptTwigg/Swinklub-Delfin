@@ -5,7 +5,6 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="b48d9f16-f8cc-44ce-af57-ae8b26191d0b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Member.java" afterPath="$PROJECT_DIR$/src/Member.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/MemberUtil.java" afterPath="$PROJECT_DIR$/src/MemberUtil.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/members.dat" afterPath="$PROJECT_DIR$/src/members.dat" />
     </list>
@@ -82,8 +81,8 @@
       <file leaf-file-name="MemberUtil.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/MemberUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="430">
-              <caret line="124" column="3" lean-forward="true" selection-start-line="124" selection-start-column="3" selection-end-line="124" selection-end-column="3" />
+            <state relative-caret-position="736">
+              <caret line="220" column="41" lean-forward="true" selection-start-line="220" selection-start-column="41" selection-end-line="220" selection-end-column="41" />
               <folding>
                 <element signature="method#memberMenu#0;class#MemberUtil#0" expanded="false" />
                 <element signature="method#addMember#0;class#MemberUtil#0" expanded="false" />
@@ -959,8 +958,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/MemberUtil.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="430">
-          <caret line="124" column="3" lean-forward="true" selection-start-line="124" selection-start-column="3" selection-end-line="124" selection-end-column="3" />
+        <state relative-caret-position="736">
+          <caret line="220" column="41" lean-forward="true" selection-start-line="220" selection-start-column="41" selection-end-line="220" selection-end-column="41" />
           <folding>
             <element signature="method#memberMenu#0;class#MemberUtil#0" expanded="false" />
             <element signature="method#addMember#0;class#MemberUtil#0" expanded="false" />

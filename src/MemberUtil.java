@@ -215,6 +215,10 @@ public class MemberUtil {
   }
 
   public static void main(String[] args) throws Exception {
-    memberMenu();
+   //memberMenu();
+    loadFromFile();
+    for(Member m : members){
+      System.out.println(m.getResults());
+    }
   }
 }
