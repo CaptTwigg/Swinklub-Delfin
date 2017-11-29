@@ -23,15 +23,24 @@ public class Main {
     String[][] array = new String[2][5];
     array[1][1] = "sdf";
 
+   FileWriter file = new FileWriter(new File("result"),true);
+   PrintStream stream = new PrintStream(new File("result"));
+  for( int i = 0; i < 4; i++){
+    //stream.printf("%s \n", test);
+    file.write(String.format("%s \n",test ));
+  }
+  file.close();
+
+
 
     for (String a : test.get(0)) {
       System.out.printf("%s \t", a);
+
     }
     System.out.println();
     for (String a : test.get(1)) {
       System.out.println(a);
     }
-
 
 //    for (ArrayList row : test) {
 //      for (int j = 0; j < 2; j++){

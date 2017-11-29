@@ -11,11 +11,14 @@ public class MemberUtil {
   Overview of methods:
     memberMenu
     addMember
+    alreadyExist
     addMemberElse
+    disciplineArray
     changeMember
     showMember
     saveToFile
     loadFromFile
+    loadArray
     stringInput
    */
 
@@ -58,7 +61,7 @@ public class MemberUtil {
 
 
     // Check if new member is passive and then use short or long constructor
-    if (alreadyExsist(firstName, lastName)) System.out.println("Member already exsist");
+    if (alreadyExist(firstName, lastName)) System.out.println("Member already exsist");
     else if (memberType.toLowerCase().equals("passive")) {
       members.add(new Member(firstName, lastName, memberType));
       members.get(members.size() - 1).setPayment();
@@ -68,7 +71,7 @@ public class MemberUtil {
   }
 
   // Check if member already exsit
-  private static boolean alreadyExsist(String firstName, String lastName) {
+  private static boolean alreadyExist(String firstName, String lastName) {
     String email = firstName + lastName + "@delfin.dk";
     for (Member m : members) {
       if (email.toLowerCase().equals(m.getEmail().toLowerCase())) return true;
@@ -81,7 +84,7 @@ public class MemberUtil {
     Scanner input = new Scanner(System.in);
 
     System.out.print("Enter discipline: ");
-    String discipline = input.next();
+    ArrayList<String> discipline = disciplineArray();
     String team = stringInput("Exerciser or Competitive: ", "exerciser", "competitive", "Not valid input");
     System.out.print("Enter age: ");
     int age = input.nextInt();
@@ -96,9 +99,27 @@ public class MemberUtil {
     members.get(members.size() - 1).setPayed(payed);
   }
 
+  // Choose disciplines for member when new member added
+  private static ArrayList<String> disciplineArray() {
+    Scanner input = new Scanner(System.in);
+    String[] disciplines = {"Crawl", "Rygcrawl", "Butterfly", "Brystsvømning", "Hundesvømning"};
+    ArrayList<String> discipline = new ArrayList<>();
+
+    System.out.println("1: Crawl, 2: Rygcrawl 3: Butterfly, 4: Brystsvømning, 5: Hundesvømning");
+    System.out.println("Enter the number of the discipline fx. 2 or 1 2 3 for multiply disciplines");
+    String chose = input.next();
+    String[] split = chose.split("");
+
+    for (int i = 0; i < split.length; i++) {
+      int get = Integer.parseInt(split[i]);
+      discipline.add(disciplines[get - 1]);
+    }
+
+    return discipline;
+  }
+
   private void changeMember() {
     Scanner input = new Scanner(System.in);
-
 
 
     boolean keepGoing = true;
@@ -137,26 +158,38 @@ public class MemberUtil {
     return -1;
   }
 
-
   private static void showMembers() {
-    for (Member member : members) {
-      System.out.println(member);
-    }
+    for (Member member : members) System.out.println(member);
   }
 
   private static void saveToFile() throws IOException {
     new PrintStream(new File(file));
-    for (Member member : members) {
-      member.saveToFile(file);
-    }
+    for (Member member : members) member.saveToFile(file);
   }
 
   private static void loadFromFile() throws FileNotFoundException {
     Scanner readFile = new Scanner(new File(file));
     while (readFile.hasNextLine()) {
       Scanner line = new Scanner(readFile.nextLine());
-      members.add(new Member(line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.nextInt(), line.nextInt()));
+      members.add(new Member(line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.nextInt(), line.nextInt(), loadArray(line.nextLine())));
     }
+    for(Member setDisciplin : members){
+      setDisciplin.setDiscipline(setDisciplin.getResults().get(0));
+    }
+  }
+
+  private static ArrayList loadArray(String raw) {
+    Scanner scan = new Scanner(raw);
+    ArrayList<ArrayList<String>> arraylist = new ArrayList<>();
+
+    String line = scan.nextLine();
+    String[] array = line.split("],");
+
+    for (String s : array) {
+      String quick = s.replaceAll("[\\[\\]]", "");
+      arraylist.add(new ArrayList<>(Arrays.asList(quick)));
+    }
+    return arraylist;
   }
 
   private static String stringInput(String message, String first, String second, String error) {
