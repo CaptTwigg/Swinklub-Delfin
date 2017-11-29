@@ -64,7 +64,7 @@ public class Member {
 
   public void saveToFile(String file) throws IOException{
     FileWriter writer = new FileWriter(new File(file), true);
-    String format = String.format("%s %s %s  %s %s %s %s %s %s %s\n"
+    String format = String.format("%s %s %s %s %s %s %s %s %s %s \n"
             , this.firstName, this.lastName, this.email, this.payed, this.memberType, this.group, this.team, this.age, this.payment, this.results);
     writer.write(format);
     writer.close();
@@ -162,6 +162,8 @@ public class Member {
   public ArrayList<ArrayList> getResults() {
     return results;
   }
+
+  public void addArrayToResults(ArrayList array){this.results.add(array);}
 
   public void setResults(ArrayList<ArrayList> results) {
     this.results = results;

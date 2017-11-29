@@ -85,6 +85,7 @@ public class MemberUtil {
 
     System.out.print("Enter discipline: ");
     ArrayList<String> discipline = disciplineArray();
+
     String team = stringInput("Exerciser or Competitive: ", "exerciser", "competitive", "Not valid input");
     System.out.print("Enter age: ");
     int age = input.nextInt();
@@ -97,6 +98,11 @@ public class MemberUtil {
     System.out.printf("Wanna pay now? \t price: %s\n", members.get(members.size() - 1).getPayment());
     String payed = stringInput("Enter yes or no: ", "yes", "no", "Not valid input");
     members.get(members.size() - 1).setPayed(payed);
+
+    // Adds Empty arrays for each discipline
+    for (String s : discipline){
+      members.get(members.size() - 1).addArrayToResults(new ArrayList());
+    }
   }
 
   // Choose disciplines for member when new member added
@@ -173,23 +179,23 @@ public class MemberUtil {
       Scanner line = new Scanner(readFile.nextLine());
       members.add(new Member(line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.nextInt(), line.nextInt(), loadArray(line.nextLine())));
     }
-    for(Member setDisciplin : members){
-      setDisciplin.setDiscipline(setDisciplin.getResults().get(0));
+    for(Member setDiscipline : members){
+      setDiscipline.setDiscipline(setDiscipline.getResults().get(0));
     }
   }
 
   private static ArrayList loadArray(String raw) {
     Scanner scan = new Scanner(raw);
-    ArrayList<ArrayList<String>> arraylist = new ArrayList<>();
+    ArrayList<ArrayList<String>> loadedArray = new ArrayList<>();
 
     String line = scan.nextLine();
     String[] array = line.split("],");
 
     for (String s : array) {
       String quick = s.replaceAll("[\\[\\]]", "");
-      arraylist.add(new ArrayList<>(Arrays.asList(quick)));
+      loadedArray.add(new ArrayList<>(Arrays.asList(quick)));
     }
-    return arraylist;
+    return loadedArray;
   }
 
   private static String stringInput(String message, String first, String second, String error) {
