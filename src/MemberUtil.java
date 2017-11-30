@@ -19,7 +19,7 @@ public class MemberUtil {
     saveToFile
     loadFromFile
     loadArray
-    stringInput
+    stringToBoolean
    */
 
   public static void memberMenu() throws Exception {
@@ -39,7 +39,7 @@ public class MemberUtil {
           addMember();
           break;
         case 2:
-//          changeMember();
+          changeMember();
           break;
         case 3:
           showMembers();
@@ -57,7 +57,7 @@ public class MemberUtil {
     String firstName = input.next();
     System.out.print("Enter last name: ");
     String lastName = input.next();
-    String memberType = stringInput("Enter member type active/passive: ", "active", "passive", "Not valid input");
+    String memberType = stringToBoolean("Enter member type active/passive: ", "active", "passive", "Not valid input");
 
 
     // Check if new member is passive and then use short or long constructor
@@ -86,7 +86,7 @@ public class MemberUtil {
     System.out.print("Enter discipline: ");
     ArrayList<String> discipline = disciplineArray();
 
-    String team = stringInput("Exerciser or Competitive: ", "exerciser", "competitive", "Not valid input");
+    String team = stringToBoolean("Exerciser or Competitive: ", "exerciser", "competitive", "Not valid input");
     System.out.print("Enter age: ");
     int age = input.nextInt();
 
@@ -96,11 +96,11 @@ public class MemberUtil {
 
     // Ask if new member want to pay now
     System.out.printf("Wanna pay now? \t price: %s\n", members.get(members.size() - 1).getPayment());
-    String payed = stringInput("Enter yes or no: ", "yes", "no", "Not valid input");
+    String payed = stringToBoolean("Enter yes or no: ", "yes", "no", "Not valid input");
     members.get(members.size() - 1).setPayed(payed);
 
     // Adds Empty arrays for each discipline
-    for (String s : discipline){
+    for (String s : discipline) {
       members.get(members.size() - 1).addArrayToResults(new ArrayList());
     }
   }
@@ -124,20 +124,48 @@ public class MemberUtil {
     return discipline;
   }
 
-  private void changeMember() {
+  private static void changeMember() {
     Scanner input = new Scanner(System.in);
+    int memberIndex;
+    do {
+      System.out.print("Enter full name: ");
+      String firstName = input.next();
+      String lastName = input.next();
+      memberIndex = searchIndex(firstName, lastName);
+    } while (memberIndex == -1);
+    System.out.println(members.get(memberIndex));
 
 
     boolean keepGoing = true;
     do {
-      System.out.println("1: First name, 2: Last name, 3: Member type, 4: ");
+      System.out.println("1: First name, 2: Last name, 3: Email 4: Member type, 5: Age");
       switch (input.nextInt()) {
         case -1:
           keepGoing = false;
           break;
         case 1:
-
+          System.out.print("Enter new first name: ");
+          members.get(memberIndex).setFirstName(input.next());
+          break;
+        case 2:
+          System.out.print("Enter new last name: ");
+          members.get(memberIndex).setLastName(input.next());
+          break;
+        case 3:
+          System.out.print("Enter new Email: ");
+          members.get(memberIndex).setEmail(input.next());
+          break;
+        case 4:
+          members.get(memberIndex).setMemberType(stringToBoolean("Enter activityform Passive or Active: ", "passiv", "active", "Not valid input"));
+          break;
+        case 5:
+          System.out.print("Enter new age: ");
+          members.get(memberIndex).setAge(input.nextInt());
+          break;
+        default:
+          System.out.println("Not valid menu number");
       }
+      members.get(memberIndex).setPayment();
     } while (keepGoing);
   }
 
@@ -157,9 +185,9 @@ public class MemberUtil {
       System.out.println(index + " " + members.get(index));
   }
 
-  private int searchIndex(String name) {
+  private static int searchIndex(String first, String last) {
     for (int index = 0; index < members.size(); index++)
-      if (name.toLowerCase().equals(members.get(index).getFirstName()) || name.toLowerCase().equals(members.get(index).getLastName()))
+      if (first.equalsIgnoreCase(members.get(index).getFirstName()) && last.equalsIgnoreCase(members.get(index).getLastName()))
         return index;
     return -1;
   }
@@ -173,32 +201,31 @@ public class MemberUtil {
     for (Member member : members) member.saveToFile(file);
   }
 
+  // Creates new Member with every token on a line in a file and adds Member to arrayList "members"
   private static void loadFromFile() throws FileNotFoundException {
     Scanner readFile = new Scanner(new File(file));
     while (readFile.hasNextLine()) {
       Scanner line = new Scanner(readFile.nextLine());
       members.add(new Member(line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.next(), line.nextInt(), line.nextInt(), loadArray(line.nextLine())));
     }
-    for(Member setDiscipline : members){
+    for (Member setDiscipline : members) {
       setDiscipline.setDiscipline(setDiscipline.getResults().get(0));
     }
   }
 
+  // method to clean up array from file. Returns new arrayList.
   private static ArrayList loadArray(String raw) {
-    Scanner scan = new Scanner(raw);
     ArrayList<ArrayList<String>> loadedArray = new ArrayList<>();
+    String[] array = raw.trim().split("](.*?)\\[");
 
-    String line = scan.nextLine().trim();
-    String[] array = line.split("\\](.*?)\\[");
-
-    for (String s : array) {
-      String quick = s.replaceAll("[\\[\\]]", "");
-      loadedArray.add(new ArrayList<>(Arrays.asList(quick)));
+    for (String index : array) {
+      String cleanString = index.replaceAll("[\\[\\]]", "");
+      loadedArray.add(new ArrayList<>(Arrays.asList(cleanString))); // adds new arrayList with cleanString to loadedArray arrayList
     }
     return loadedArray;
   }
 
-  private static String stringInput(String message, String first, String second, String error) {
+  private static String stringToBoolean(String message, String first, String second, String error) {
     Scanner input = new Scanner(System.in);
     System.out.print(message);
     String inputString = input.next();
@@ -208,17 +235,49 @@ public class MemberUtil {
     else if (inputString.toLowerCase().equals(second)) returnVal = second;
     else {
       System.out.println(error);
-      returnVal = stringInput(message, first, second, error);
+      returnVal = stringToBoolean(message, first, second, error);
     }
 
     return returnVal;
   }
 
+  //Test main for memberUtil
   public static void main(String[] args) throws Exception {
-   memberMenu();
-    //loadFromFile();
-    for(Member m : members){
-      System.out.println("final: " + m.getResults());
+    memberMenu();
+  }
+
+  // Emil method
+  //
+  public static int addResult() {
+    Scanner input = new Scanner(System.in);
+
+    System.out.println("Write the name of the member! Write \"back\" to go back");
+    String firstName = input.next();
+    if (firstName.equalsIgnoreCase("back")) {
+      return -1;
+    }
+    String lastName = input.next();
+    for (int i = 0; i < members.size(); i++) {
+      if (firstName.equalsIgnoreCase(members.get(i).getFirstName()) && lastName.equalsIgnoreCase(members.get(i).getLastName())) {
+        return i;
+      }
+    }
+
+    System.out.println("Member does not exist");
+    return addResult();
+  }
+
+  public static void discResult(int i) {
+    Scanner chose = new Scanner(System.in);
+    Scanner time = new Scanner(System.in);
+    if (i >= 0) {
+      System.out.println("Enter the number of the discipline");
+      System.out.println(members.get(i).getDiscipline());
+
+      int temp = chose.nextInt();
+      System.out.println("Enter recorded time");
+      members.get(i).getResults().get(temp).add(time.next());
+      System.out.println(members.get(i).getResults());
     }
   }
 }

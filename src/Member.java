@@ -163,9 +163,11 @@ public class Member {
     return results;
   }
 
-  public void addArrayToResults(ArrayList array){this.results.add(array);}
-
   public void setResults(ArrayList<ArrayList> results) {
     this.results = results;
+  }
+
+  public void addArrayToResults(ArrayList array){
+    this.results.add(array);
   }
 }

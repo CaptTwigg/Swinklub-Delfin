@@ -9,7 +9,7 @@ public class Main {
     employees.add(new Formand("Bob", "Olsen", "Bob@delfin.dk", "Bigboss", "1234", 5, 5));
     employees.add(new Kasserer("Bob", "Olsen", "Bob@delfin.dk", "MoneyMan", "1234"));
 
-    // mainMenu(employees);
+    mainMenu(employees);
   }
 
   private static void mainMenu(ArrayList<Employee> employees) throws Exception {
