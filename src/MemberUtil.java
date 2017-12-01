@@ -126,6 +126,8 @@ public class MemberUtil {
 
   private static void changeMember() {
     Scanner input = new Scanner(System.in);
+
+    //Check if entered member exist or is found
     int memberIndex;
     do {
       System.out.print("Enter full name: ");
@@ -135,7 +137,7 @@ public class MemberUtil {
     } while (memberIndex == -1);
     System.out.println(members.get(memberIndex));
 
-
+    // switch submenu for member
     boolean keepGoing = true;
     do {
       System.out.println("1: First name, 2: Last name, 3: Email 4: Member type, 5: Age");

@@ -41,7 +41,6 @@ public class Member {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
-    this.discipline = discipline;
     this.payed = payed;
     this.memberType = memberType;
     this.group = group;
