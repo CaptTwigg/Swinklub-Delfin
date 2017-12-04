@@ -13,7 +13,6 @@ public class Main {
   }
 
   private static void mainMenu() throws Exception {
-
     int menuNumber = 0;
     int employeeType = login();
 
@@ -28,8 +27,10 @@ public class Main {
         MemberUtil.memberMenu();
         break;
       case 2:
-//          kontigentMenu();
-        System.out.println("Kasserer menu");
+        MemberUtil.kassererMenu();
+        break;
+      case 3:
+        MemberUtil.trænerMenu();
         break;
       case 4:
         createEmployee();
@@ -39,22 +40,18 @@ public class Main {
 
   private static int login() {
     Scanner input = new Scanner(System.in);
-    System.out.println("Enter username:");
-    String user = input.next();
-    System.out.println("Enter password");
-    String pass = input.next();
-    int index = -1;
 
-    for (int i = 0; i < employees.size(); i++) {
-      if (employees.get(i).checkUsername(user) && employees.get(i).checkPassword(pass)) {
-        index = i;
-      }
-    }
-    if (index == -1) {
-      System.out.println("Username or Password wrong");
-      index = login();
-    }
-    return index;
+    System.out.print("Enter username: ");
+    String user = input.next();
+    System.out.print("Enter password: ");
+    String pass = input.next();
+
+    for (int i = 0; i < employees.size(); i++)
+      if (employees.get(i).checkUsername(user) && employees.get(i).checkPassword(pass))
+        return i;
+
+    System.out.println("Username or Password wrong");
+    return login();
   }
 
   private static void createEmployee() {
@@ -71,17 +68,21 @@ public class Main {
     System.out.println("Enter password");
     String pass = input.next();
 
-    if (emp.equalsIgnoreCase("Formand")) employees.add(new Formand(first, last, user, pass));
-    else if (emp.equalsIgnoreCase("Kasserer")) employees.add(new Kasserer(first, last, user, pass));
-    else if (emp.equalsIgnoreCase("Træner")) employees.add(new Træner(first, last, user, pass));
-    else System.out.println("Not right employee type");
+    if (emp.equalsIgnoreCase("Formand"))
+      employees.add(new Formand(first, last, user, pass));
+    else if (emp.equalsIgnoreCase("Kasserer"))
+      employees.add(new Kasserer(first, last, user, pass));
+    else if (emp.equalsIgnoreCase("Træner"))
+      employees.add(new Træner(first, last, user, pass));
+    else
+      System.out.println("Not right employee type");
   }
 
   private static void saveToFile() throws IOException {
     new PrintStream(new File(file)); //Clears file
 
     for (Employee e : employees) {
-      e.setType(e.getClass().toString());
+      e.setType(e.getClass().toString()); //Sets class type fx. formand, kasserer...
       e.saveToFile(file);
     }
   }

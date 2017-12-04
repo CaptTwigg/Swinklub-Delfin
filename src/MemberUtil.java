@@ -7,6 +7,15 @@ public class MemberUtil {
   private static final String file = "src/members.dat";
   private static ArrayList<Member> members = new ArrayList<>();
 
+  //Test main for memberUtil
+  public static void main(String[] args) throws Exception {
+
+
+    //memberMenu();
+    kassererMenu();
+    //trænerMenu();
+  }
+
   /*
   Overview of methods:
     memberMenu
@@ -15,6 +24,7 @@ public class MemberUtil {
     addMemberElse
     disciplineArray
     changeMember
+    searchIndex
     showMember
     saveToFile
     loadFromFile
@@ -59,7 +69,6 @@ public class MemberUtil {
     String lastName = input.next();
     String memberType = stringToBoolean("Enter member type active/passive: ", "active", "passive", "Not valid input");
 
-
     // Check if new member is passive and then use short or long constructor
     if (alreadyExist(firstName, lastName)) System.out.println("Member already exsist");
     else if (memberType.toLowerCase().equals("passive")) {
@@ -68,6 +77,11 @@ public class MemberUtil {
     } else {
       addMemberElse(firstName, lastName, memberType);
     }
+
+    // Ask if new member want to pay now
+    System.out.printf("Wanna pay now? \t price: %s\n", members.get(members.size() - 1).getPayment());
+    String payed = stringToBoolean("Enter yes or no: ", "yes", "no", "Not valid input");
+    members.get(members.size() - 1).setPayed(payed);
   }
 
   // Check if member already exsit
@@ -93,11 +107,6 @@ public class MemberUtil {
     // create object member and set payment
     members.add(new Member(firstName, lastName, discipline, memberType, team, age));
     members.get(members.size() - 1).setPayment();
-
-    // Ask if new member want to pay now
-    System.out.printf("Wanna pay now? \t price: %s\n", members.get(members.size() - 1).getPayment());
-    String payed = stringToBoolean("Enter yes or no: ", "yes", "no", "Not valid input");
-    members.get(members.size() - 1).setPayed(payed);
 
     // Adds Empty arrays for each discipline
     for (String s : discipline) {
@@ -171,22 +180,6 @@ public class MemberUtil {
     } while (keepGoing);
   }
 
-  private void showSearch(String name) {
-    ArrayList<Member> foundArray = new ArrayList<>();
-    for (Member member : members) {
-      if (name
-              .toLowerCase()
-              .equals(member.getFirstName())
-              || name
-              .toLowerCase()
-              .equals(member.getLastName())) {
-        foundArray.add(member);
-      }
-    }
-    for (int index = 0; index < members.size(); index++)
-      System.out.println(index + " " + members.get(index));
-  }
-
   private static int searchIndex(String first, String last) {
     for (int index = 0; index < members.size(); index++)
       if (first.equalsIgnoreCase(members.get(index).getFirstName()) && last.equalsIgnoreCase(members.get(index).getLastName()))
@@ -243,43 +236,122 @@ public class MemberUtil {
     return returnVal;
   }
 
-  //Test main for memberUtil
-  public static void main(String[] args) throws Exception {
-    memberMenu();
+
+
+   /*
+ Kasserer methods and menu
+
+Methods:
+  kassererMenu
+  checkAktivitetsForm - can sorts
+
+  */
+
+  public static void kassererMenu() throws IOException {
+    loadFromFile();
+    Scanner menuInput = new Scanner(System.in);
+    boolean again = true;
+    do {
+      System.out.println("1: Sorted by have payed, 2: Sorted by haven't payed, -1 Logout");
+      int menu = menuInput.nextInt();
+
+      switch (menu) {
+        case -1:
+          again = false;
+          break;
+        case 1:
+          checkAktivitetsForm("yes");
+          break;
+        case 2:
+          checkAktivitetsForm("no");
+          break;
+      }
+
+    } while (again);
+    saveToFile();
   }
 
-  // Emil method
-  //
-  public static int addResult() {
+
+  private static void checkAktivitetsForm(String sort) {
+    ArrayList<String> sorted = new ArrayList<>();
+    for (Member m : members) {
+      String format = String.format("Name: %s %-10s \t Membertype: %s \t Payment: %s \t Payed:  %s "
+              , m.getFirstName(), m.getLastName(), m.getMemberType(), m.getPayment(), m.getPayed());
+      if (sort.equalsIgnoreCase(m.getPayed()))
+        sorted.add(0, format);
+      else
+        sorted.add(format);
+    }
+    for (String s : sorted)
+      System.out.println(s);
+  }
+
+ /*
+ Træner methods and menu
+
+Methods:
+  TrænerMenu
+  findMemberIndex
+
+  */
+
+  public static void trænerMenu() throws IOException {
+    loadFromFile();
+    Scanner menuInput = new Scanner(System.in);
+    boolean again = true;
+    do {
+      System.out.println("1: Add result, 2: show results, 3: Show top 5, -1 Logout");
+
+      switch (menuInput.nextInt()) {
+        case -1:
+          again = false;
+          break;
+        case 1:
+          discResult(findMemberIndex());
+          break;
+        case 2:
+          System.out.println("Show");
+          break;
+        case 3:
+          System.out.println("top 5");
+          break;
+        default:
+          System.out.println("Not valid menu number");
+      }
+
+    } while (again);
+    saveToFile();
+  }
+
+  private static int findMemberIndex() {
     Scanner input = new Scanner(System.in);
 
-    System.out.println("Write the name of the member! Write \"back\" to go back");
+    System.out.println("Write the full name of the member! Write \"back\" to go back");
     String firstName = input.next();
-    if (firstName.equalsIgnoreCase("back")) {
+    if (firstName.equalsIgnoreCase("back"))
       return -1;
-    }
+
     String lastName = input.next();
-    for (int i = 0; i < members.size(); i++) {
-      if (firstName.equalsIgnoreCase(members.get(i).getFirstName()) && lastName.equalsIgnoreCase(members.get(i).getLastName())) {
-        return i;
-      }
-    }
+    for (int index = 0; index < members.size(); index++)
+      if (firstName.equalsIgnoreCase(members.get(index).getFirstName()) && lastName.equalsIgnoreCase(members.get(index).getLastName()))
+        return index;
 
     System.out.println("Member does not exist");
-    return addResult();
+    return findMemberIndex();
   }
 
-  public static void discResult(int i) {
+  private static void discResult(int memberIndex) {
     Scanner chose = new Scanner(System.in);
-    Scanner time = new Scanner(System.in);
-    if (i >= 0) {
+    if (memberIndex >= 0) {
       System.out.println("Enter the number of the discipline");
-      System.out.println(members.get(i).getDiscipline());
+      System.out.println(members.get(memberIndex).getDiscipline());
+      int disciplineNumber = chose.nextInt();
 
-      int temp = chose.nextInt();
       System.out.println("Enter recorded time");
-      members.get(i).getResults().get(temp).add(time.next());
-      System.out.println(members.get(i).getResults());
+      members.get(memberIndex)
+              .getResults().get(disciplineNumber)
+              .add(chose.next());
+      System.out.println(members.get(memberIndex).getResults());
     }
   }
 }
