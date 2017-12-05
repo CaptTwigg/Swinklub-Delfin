@@ -9,10 +9,11 @@ public class MemberUtil {
 
   //Test main for memberUtil
   public static void main(String[] args) throws Exception {
-
+    loadFromFile();
+    top5("Crawl");
 
     //memberMenu();
-    kassererMenu();
+    //kassererMenu();
     //trænerMenu();
   }
 
@@ -215,7 +216,7 @@ public class MemberUtil {
 
     for (String index : array) {
       String cleanString = index.replaceAll("[\\[\\]]", "");
-      loadedArray.add(new ArrayList<>(Arrays.asList(cleanString))); // adds new arrayList with cleanString to loadedArray arrayList
+      loadedArray.add(new ArrayList<>(Arrays.asList(cleanString.split(",")))); // adds new arrayList with cleanString to loadedArray arrayList
     }
     return loadedArray;
   }
@@ -243,7 +244,7 @@ public class MemberUtil {
 
 Methods:
   kassererMenu
-  checkAktivitetsForm - can sorts
+  showRestance - can sorts
 
   */
 
@@ -260,10 +261,10 @@ Methods:
           again = false;
           break;
         case 1:
-          checkAktivitetsForm("yes");
+          showRestance("yes");
           break;
         case 2:
-          checkAktivitetsForm("no");
+          showRestance("no");
           break;
       }
 
@@ -272,7 +273,7 @@ Methods:
   }
 
 
-  private static void checkAktivitetsForm(String sort) {
+  private static void showRestance(String sort) {
     ArrayList<String> sorted = new ArrayList<>();
     for (Member m : members) {
       String format = String.format("Name: %s %-10s \t Membertype: %s \t Payment: %s \t Payed:  %s "
@@ -340,18 +341,142 @@ Methods:
     return findMemberIndex();
   }
 
-  private static void discResult(int memberIndex) {
+  public static void discResult(int memberIndex) {
     Scanner chose = new Scanner(System.in);
+
     if (memberIndex >= 0) {
       System.out.println("Enter the number of the discipline");
       System.out.println(members.get(memberIndex).getDiscipline());
-      int disciplineNumber = chose.nextInt();
 
+      int disciplineNumber = chose.nextInt();
       System.out.println("Enter recorded time");
-      members.get(memberIndex)
-              .getResults().get(disciplineNumber)
-              .add(chose.next());
+      double result = chose.nextDouble();
+      members.get(memberIndex).getResults().get(disciplineNumber).add(result);
       System.out.println(members.get(memberIndex).getResults());
+      switch (members.get(memberIndex).getResults().get(0).get(disciplineNumber - 1).toString()) {
+        case "Crawl":
+          disciplineNumber = 1;
+          break;
+        case "Rygcrawl":
+          disciplineNumber = 2;
+          break;
+        case "Butterfly":
+          disciplineNumber = 3;
+          break;
+        case "Brystsvømning":
+          disciplineNumber = 4;
+          break;
+        case "Hundesvømning":
+          disciplineNumber = 5;
+          break;
+        default:
+          System.out.println("default");
+          break;
+      }
+      int j = compareTop5(result, disciplineNumber);
+      if (j != -1) {
+        top5[disciplineNumber - 1].add(j, members.get(memberIndex).getFirstName() + members.get(memberIndex).getLastName() + " " + result);
+        top5[disciplineNumber - 1].remove(5);
+      }
     }
+  }
+
+
+  public static ArrayList[] loadTop5() throws Exception {
+    ArrayList[] top5 = new ArrayList[5];
+    ArrayList<String> crawl = new ArrayList<>();
+    ArrayList<String> Rygcrawl = new ArrayList<>();
+    ArrayList<String> Butterfly = new ArrayList<>();
+    ArrayList<String> Brystsvømning = new ArrayList<>();
+    ArrayList<String> Hundesvømning = new ArrayList<>();
+    top5[0] = crawl;
+    top5[1] = Rygcrawl;
+    top5[2] = Butterfly;
+    top5[3] = Brystsvømning;
+    top5[4] = Hundesvømning;
+
+    Scanner readFile = new Scanner(new File("Top5.dat"));
+    for (int i = 0; i < 5; i++) {
+      for (int j = 0; j < 5; j++) {
+        top5[i].add(j, (readFile.next() + " " + readFile.next()));
+      }
+    }
+
+    return top5;
+  }
+
+  public static void printTop5(ArrayList[] grid) {
+    Scanner input = new Scanner(System.in);
+    System.out.println("What discipline do you want to see? Write the number \n1: Crawl\n2: Rygcrawl\n3: Butterfly\n4: Brystsvømning\n5: Hundesvømning");
+    int i = input.nextInt();
+    for (int j = 0; j < 5; j++) {
+      System.out.printf("%20s \n", grid[i - 1].get(j));
+    }
+    System.out.println();
+
+  }
+
+  public static void saveTop5(ArrayList[] grid) throws Exception {
+    PrintStream top5 = new PrintStream(new File("top5.dat"));
+    for (int i = 0; i < 5; i++) {
+      for (int j = 0; j < 5; j++) {
+        top5.print(grid[i].get(j) + " ");
+      }
+      top5.println();
+    }
+  }
+
+  public static int compareTop5(double result, int discipline) {
+    for (int i = 0; i < 5; i++) {
+      String temp = top5[discipline - 1].get(i).toString();
+      String[] parts = temp.split(" ");
+      String temp2 = parts[1];
+      double temp3 = Double.parseDouble(temp2);
+      if (temp3 > result) {
+        return (i);
+      }
+    }
+    return (-1);
+
+  }
+
+
+  private static void top5(String dis) {
+    ArrayList<Member> disciplinSort = new ArrayList<>();
+
+    for (int i = 0; i < members.size(); i++) {
+      for (int j = 0; j < members.get(i).getResults().get(0).size(); j++) {
+        if (members.get(i).getResults().get(0).get(j).equals(dis))
+          disciplinSort.add(members.get(i));
+      }
+    }
+
+    for (int i = 0; i < disciplinSort.size(); i++) {
+      for (int j = 0; j < disciplinSort.get(i).getResults().get(1).size(); j++) {
+        System.out.println(Double.parseDouble(disciplinSort.get(i).getResults().get(1).get(j).toString()));
+      }
+    }
+    ArrayList<ArrayList<String>> test = new ArrayList<>();
+    ArrayList<Double> sortD = new ArrayList<>();
+    ArrayList<String> sortS = new ArrayList<>();
+    test.add(disciplinSort.get(1).getResults().get(0));
+    for (int i = 0; i < disciplinSort.size(); i++) {
+      for (int j = 0; j < disciplinSort.get(i).getResults().get(1).size(); j++) {
+        sortD.add(Double.parseDouble(disciplinSort.get(1).getResults().get(1).get(i).toString()));
+      }
+    }
+    Collections.sort(sortD);
+    for (Double d : sortD)
+      sortS.add(d.toString());
+    test.add(sortS);
+    System.out.println(test);
+  }
+
+  private static int disIndex(int member, String dis) {
+    for (int i = 0; i < members.get(member).getResults().get(0).size(); i++) {
+      if (members.get(member).getResults().get(0).get(i).equals(dis))
+        return i;
+    }
+    return -1;
   }
 }
