@@ -6,15 +6,13 @@ public class MemberUtil {
 
   private static final String file = "src/members.dat";
   private static ArrayList<Member> members = new ArrayList<>();
+  private static ArrayList[] top5 = new ArrayList[5];
 
   //Test main for memberUtil
   public static void main(String[] args) throws Exception {
-    loadFromFile();
-    top5("Crawl");
-
-    //memberMenu();
-    //kassererMenu();
-    //trænerMenu();
+    memberMenu();
+    // kassererMenu();
+    // trænerMenu();
   }
 
   /*
@@ -40,7 +38,7 @@ public class MemberUtil {
     loadFromFile();
 
     do {
-      System.out.println("\n1: Add Member 2: Change member info 3: Show members");
+      System.out.println("\n1: Add Member 2: Change member info 3: Show members, -1 Logout");
 
       switch (scanner.nextInt()) {
         case -1:
@@ -125,12 +123,12 @@ public class MemberUtil {
     System.out.println("Enter the number of the discipline fx. 2 or 1 2 3 for multiply disciplines");
     String chose = input.next();
     String[] split = chose.split("");
-
-    for (int i = 0; i < split.length; i++) {
-      int get = Integer.parseInt(split[i]);
-      discipline.add(disciplines[get - 1]);
+    if (!chose.equalsIgnoreCase("0")) {
+      for (int i = 0; i < split.length; i++) {
+        int get = Integer.parseInt(split[i]);
+        discipline.add(disciplines[get - 1]);
+      }
     }
-
     return discipline;
   }
 
@@ -150,7 +148,7 @@ public class MemberUtil {
     // switch submenu for member
     boolean keepGoing = true;
     do {
-      System.out.println("1: First name, 2: Last name, 3: Email 4: Member type, 5: Age");
+      System.out.println("1: First name, 2: Last name, 3: Email 4: Member type, 5: Age, -1 Back");
       switch (input.nextInt()) {
         case -1:
           keepGoing = false;
@@ -242,9 +240,10 @@ public class MemberUtil {
    /*
  Kasserer methods and menu
 
-Methods:
-  kassererMenu
-  showRestance - can sorts
+  Methods:
+    kassererMenu
+    showRestance - can be sorted
+    changePayed
 
   */
 
@@ -253,7 +252,7 @@ Methods:
     Scanner menuInput = new Scanner(System.in);
     boolean again = true;
     do {
-      System.out.println("1: Sorted by have payed, 2: Sorted by haven't payed, -1 Logout");
+      System.out.println("1: Sorted by have payed, 2: Sorted by haven't payed, 3: Change payed -1 Logout");
       int menu = menuInput.nextInt();
 
       switch (menu) {
@@ -266,6 +265,11 @@ Methods:
         case 2:
           showRestance("no");
           break;
+        case 3:
+          changePayed();
+          break;
+        default:
+          System.out.println("Not valid number");
       }
 
     } while (again);
@@ -287,17 +291,28 @@ Methods:
       System.out.println(s);
   }
 
+  private static void changePayed() {
+    int newPay = findMemberIndex();
+    String payed = stringToBoolean("Enter yes or no", "yes", "no", "Not valid input");
+    members.get(newPay).setPayed(payed);
+  }
+
  /*
  Træner methods and menu
 
-Methods:
-  TrænerMenu
-  findMemberIndex
-
+  Methods:
+    TrænerMenu
+    findMemberIndex
+    discResult
+    loadTop5
+    printTop5
+    saveTop5
+    compareTop5
   */
 
-  public static void trænerMenu() throws IOException {
+  public static void trænerMenu() throws Exception {
     loadFromFile();
+    top5 = loadTop5();
     Scanner menuInput = new Scanner(System.in);
     boolean again = true;
     do {
@@ -314,13 +329,14 @@ Methods:
           System.out.println("Show");
           break;
         case 3:
-          System.out.println("top 5");
+          printTop5(top5);
           break;
         default:
           System.out.println("Not valid menu number");
       }
 
     } while (again);
+    saveTop5(top5);
     saveToFile();
   }
 
@@ -395,17 +411,16 @@ Methods:
     top5[3] = Brystsvømning;
     top5[4] = Hundesvømning;
 
-    Scanner readFile = new Scanner(new File("Top5.dat"));
+    Scanner readFile = new Scanner(new File("src/Top5.dat"));
     for (int i = 0; i < 5; i++) {
       for (int j = 0; j < 5; j++) {
         top5[i].add(j, (readFile.next() + " " + readFile.next()));
       }
     }
-
     return top5;
   }
 
-  public static void printTop5(ArrayList[] grid) {
+  public static void printTop5(ArrayList[] grid) throws NullPointerException {
     Scanner input = new Scanner(System.in);
     System.out.println("What discipline do you want to see? Write the number \n1: Crawl\n2: Rygcrawl\n3: Butterfly\n4: Brystsvømning\n5: Hundesvømning");
     int i = input.nextInt();
@@ -413,11 +428,10 @@ Methods:
       System.out.printf("%20s \n", grid[i - 1].get(j));
     }
     System.out.println();
-
   }
 
   public static void saveTop5(ArrayList[] grid) throws Exception {
-    PrintStream top5 = new PrintStream(new File("top5.dat"));
+    PrintStream top5 = new PrintStream(new File("src/top5.dat"));
     for (int i = 0; i < 5; i++) {
       for (int j = 0; j < 5; j++) {
         top5.print(grid[i].get(j) + " ");
@@ -440,43 +454,4 @@ Methods:
 
   }
 
-
-  private static void top5(String dis) {
-    ArrayList<Member> disciplinSort = new ArrayList<>();
-
-    for (int i = 0; i < members.size(); i++) {
-      for (int j = 0; j < members.get(i).getResults().get(0).size(); j++) {
-        if (members.get(i).getResults().get(0).get(j).equals(dis))
-          disciplinSort.add(members.get(i));
-      }
-    }
-
-    for (int i = 0; i < disciplinSort.size(); i++) {
-      for (int j = 0; j < disciplinSort.get(i).getResults().get(1).size(); j++) {
-        System.out.println(Double.parseDouble(disciplinSort.get(i).getResults().get(1).get(j).toString()));
-      }
-    }
-    ArrayList<ArrayList<String>> test = new ArrayList<>();
-    ArrayList<Double> sortD = new ArrayList<>();
-    ArrayList<String> sortS = new ArrayList<>();
-    test.add(disciplinSort.get(1).getResults().get(0));
-    for (int i = 0; i < disciplinSort.size(); i++) {
-      for (int j = 0; j < disciplinSort.get(i).getResults().get(1).size(); j++) {
-        sortD.add(Double.parseDouble(disciplinSort.get(1).getResults().get(1).get(i).toString()));
-      }
-    }
-    Collections.sort(sortD);
-    for (Double d : sortD)
-      sortS.add(d.toString());
-    test.add(sortS);
-    System.out.println(test);
-  }
-
-  private static int disIndex(int member, String dis) {
-    for (int i = 0; i < members.get(member).getResults().get(0).size(); i++) {
-      if (members.get(member).getResults().get(0).get(i).equals(dis))
-        return i;
-    }
-    return -1;
-  }
 }

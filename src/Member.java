@@ -70,7 +70,6 @@ public class Member {
 
   }
 
-  @Override
   public String toString() {
     return String.format("Name: %s %-10s \t Email: %-20s \t Payed: %-4s \t MemberType: %-4s \t Group: %-4s \t Team: %-8s \t Age: %-4s \t Payment: %-4s \t Discipline: %s"
             , this.firstName, this.lastName, this.email, this.payed, this.memberType, this.group, this.team, this.age, this.payment, this.discipline);
