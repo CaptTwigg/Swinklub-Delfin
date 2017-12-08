@@ -10,7 +10,7 @@ public class MemberUtil {
 
   //Test main for memberUtil
   public static void main(String[] args) throws Exception {
-    memberMenu();
+    // memberMenu();
     // kassererMenu();
     // trænerMenu();
   }
@@ -214,7 +214,7 @@ public class MemberUtil {
 
     for (String index : array) {
       String cleanString = index.replaceAll("[\\[\\]]", "");
-      loadedArray.add(new ArrayList<>(Arrays.asList(cleanString.split(",")))); // adds new arrayList with cleanString to loadedArray arrayList
+      loadedArray.add(new ArrayList<>(Arrays.asList(cleanString.split(", ")))); // adds new arrayList with cleanString to loadedArray arrayList
     }
     return loadedArray;
   }
@@ -304,6 +304,7 @@ public class MemberUtil {
     TrænerMenu
     findMemberIndex
     discResult
+    showResult
     loadTop5
     printTop5
     saveTop5
@@ -326,7 +327,7 @@ public class MemberUtil {
           discResult(findMemberIndex());
           break;
         case 2:
-          System.out.println("Show");
+          showResult();
           break;
         case 3:
           printTop5(top5);
@@ -357,7 +358,7 @@ public class MemberUtil {
     return findMemberIndex();
   }
 
-  public static void discResult(int memberIndex) {
+  private static void discResult(int memberIndex) {
     Scanner chose = new Scanner(System.in);
 
     if (memberIndex >= 0) {
@@ -397,8 +398,18 @@ public class MemberUtil {
     }
   }
 
+  private static void showResult() {
+    int person = findMemberIndex();
+    for (int j = 0; j < members.get(person).getResults().get(0).size(); j++) {
+      System.out.println(members.get(person).getResults().get(0).get(j));
+      for (int i = 0; i < members.get(person).getResults().get(j + 1).size(); i++) {
+        System.out.println(members.get(person).getResults().get(j + 1).get(i));
+      }
+      System.out.println();
+    }
+  }
 
-  public static ArrayList[] loadTop5() throws Exception {
+  private static ArrayList[] loadTop5() throws Exception {
     ArrayList[] top5 = new ArrayList[5];
     ArrayList<String> crawl = new ArrayList<>();
     ArrayList<String> Rygcrawl = new ArrayList<>();
@@ -420,7 +431,7 @@ public class MemberUtil {
     return top5;
   }
 
-  public static void printTop5(ArrayList[] grid) throws NullPointerException {
+  private static void printTop5(ArrayList[] grid) throws NullPointerException {
     Scanner input = new Scanner(System.in);
     System.out.println("What discipline do you want to see? Write the number \n1: Crawl\n2: Rygcrawl\n3: Butterfly\n4: Brystsvømning\n5: Hundesvømning");
     int i = input.nextInt();
@@ -430,7 +441,7 @@ public class MemberUtil {
     System.out.println();
   }
 
-  public static void saveTop5(ArrayList[] grid) throws Exception {
+  private static void saveTop5(ArrayList[] grid) throws Exception {
     PrintStream top5 = new PrintStream(new File("src/top5.dat"));
     for (int i = 0; i < 5; i++) {
       for (int j = 0; j < 5; j++) {
@@ -440,7 +451,7 @@ public class MemberUtil {
     }
   }
 
-  public static int compareTop5(double result, int discipline) {
+  private static int compareTop5(double result, int discipline) {
     for (int i = 0; i < 5; i++) {
       String temp = top5[discipline - 1].get(i).toString();
       String[] parts = temp.split(" ");
